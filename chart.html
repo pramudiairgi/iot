@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard IoT - Suhu & Kelembaban</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        canvas {
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Grafik Suhu (°C)</h2>
+    <canvas id="tempChart" width="800" height="400"></canvas>
+
+    <h2>Grafik Kelembaban (%)</h2>
+    <canvas id="humidityChart" width="800" height="400"></canvas>
+
+    <script>
+        async function fetchData() {
+            const response = await fetch('get_data.php');
+            const data = await response.json();
+
+            const labels = data.map(item => item.created_at);
+            const tempData = data.map(item => item.temperature);
+            const humidityData = data.map(item => item.humidity);
+
+            renderTempChart(labels, tempData);
+            renderHumidityChart(labels, humidityData);
+        }
+
+        function renderTempChart(labels, data) {
+            const ctx = document.getElementById('tempChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Suhu (°C)',
+                        data: data,
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Waktu' } },
+                        y: { title: { display: true, text: 'Suhu (°C)' } }
+                    }
+                }
+            });
+        }
+
+        function renderHumidityChart(labels, data) {
+            const ctx = document.getElementById('humidityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Kelembaban (%)',
+                        data: data,
+                        borderColor: 'blue',
+                        backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Waktu' } },
+                        y: { title: { display: true, text: 'Kelembaban (%)' } }
+                    }
+                }
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
