@@ -11,7 +11,7 @@ $port = 1883;
 $clientId = 'php-subscriber-' . uniqid();
 $username = 'usm';
 $password = 'usmjaya1';
-$topic = 'iot/G.231.22.0165';
+$topic = 'iot/G.231.22.0173';
 
 try {
     $mqtt = new MqttClient($server, $port, $clientId);
@@ -34,7 +34,7 @@ try {
     $mqtt->subscribe($topic, function (string $topic, string $message) {
         echo "📥 Pesan diterima di topik [$topic]: $message\n";
 
-        $url = 'http://localhost/nitip/insert.php';
+        $url = 'http://localhost/IOT/web/insert.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
@@ -55,8 +55,6 @@ try {
 
     // ✅ Loop MQTT agar terus berjalan
     $mqtt->loop(true);
-
 } catch (MqttClientException $e) {
     echo "❌ MQTT Error: " . $e->getMessage();
 }
-?>

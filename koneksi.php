@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "iot_tampilan";
+$db   = "iot_monitoring";
 
 $conn = new mysqli($host, $user, $pass, $db);
 
@@ -13,4 +13,3 @@ if ($conn->connect_error) {
 
 // Set charset UTF-8
 $conn->set_charset("utf8");
-?>
